@@ -1,0 +1,330 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Titan+One&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  /* dark night - the default */
+  --bg-1: #07060d;
+  --bg-2: #120c22;
+  --bg-3: #07060d;
+  --sheen: rgba(255, 203, 5, .10);
+  --floor: rgba(59, 91, 165, .28);
+  --text: #f6f2e8;
+  --text-soft: rgba(246, 242, 232, .55);
+  --title: #ffe27a;
+  --title-shadow: 0 0 26px rgba(255, 203, 5, .5);
+  --ghost: rgba(255, 203, 5, .05);
+  --rain: #8a8398;
+  --rain-head: #ffd44d;
+  --rain-blend: screen;
+  --logo-shadow: drop-shadow(0 5px 0 rgba(0, 0, 0, .45)) drop-shadow(0 0 38px rgba(255, 203, 5, .3));
+  --glow: .75;
+  --hint: rgba(246, 242, 232, .5);
+  --hint-key: #ffcb05;
+  --chip: rgba(246, 242, 232, .1);
+  --chip-line: rgba(246, 242, 232, .22);
+  --volt: #ffcb05;
+  --volt-soft: #ffe27a;
+  --bolt: #3b5ba5;
+  --paper: #f6f2e8;
+  --mono: 'Space Mono', ui-monospace, monospace;
+  --jp: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+html[data-theme="light"] {
+  /* the same studio plate the frames were shot on */
+  --bg-1: #e9e9e9;
+  --bg-2: #cdcdcd;
+  --bg-3: #b6b6b6;
+  --sheen: rgba(255, 255, 255, .75);
+  --floor: rgba(150, 150, 150, .55);
+  --text: #1d1b24;
+  --text-soft: rgba(29, 27, 36, .55);
+  --title: #b8860b;
+  --title-shadow: 0 2px 0 rgba(255, 255, 255, .7), 0 0 26px rgba(255, 203, 5, .5);
+  --ghost: rgba(29, 27, 36, .06);
+  --rain: #8d8a97;
+  --rain-head: #d9a400;
+  --rain-blend: multiply;
+  --logo-shadow: drop-shadow(0 5px 0 rgba(29, 27, 36, .28)) drop-shadow(0 8px 22px rgba(29, 27, 36, .22));
+  --glow: .5;
+  --hint: rgba(29, 27, 36, .55);
+  --hint-key: #a8720a;
+  --chip: rgba(29, 27, 36, .06);
+  --chip-line: rgba(29, 27, 36, .2);
+}
+
+body {
+  margin: 0;
+  background: var(--bg-2);
+  color: var(--text);
+  font-family: var(--jp);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── the one section ───────────────────────────────────────────── */
+.stage {
+  position: relative;
+  height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  background:
+    radial-gradient(120% 80% at 50% 26%, var(--sheen), transparent 62%),
+    radial-gradient(130% 100% at 50% 104%, var(--floor), transparent 62%),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 60%, var(--bg-3) 100%);
+  transition: background .45s ease, color .45s ease;
+  cursor: crosshair;
+}
+
+/* the volt pool he sits in — flares on click */
+.stage__glow {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  width: min(78vw, 900px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: radial-gradient(circle, rgba(255, 203, 5, .30), rgba(255, 203, 5, .08) 45%, transparent 68%);
+  filter: blur(16px);
+  opacity: var(--glow);
+  transition: opacity .5s ease, scale .6s cubic-bezier(.2, .8, .2, 1);
+  pointer-events: none;
+}
+.stage.is-zapped .stage__glow { opacity: 1; scale: 1.14; }
+
+.glyph-rain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  mask-image: linear-gradient(180deg, transparent, #000 12%, #000 74%, transparent);
+  mix-blend-mode: var(--rain-blend);
+}
+
+/* huge ghost kanji behind everything */
+.stage__kanji {
+  position: absolute;
+  right: clamp(-20px, 2vw, 60px);
+  top: 50%;
+  translate: 0 -50%;
+  margin: 0;
+  font-family: var(--jp);
+  font-weight: 900;
+  font-size: clamp(180px, 34vw, 460px);
+  line-height: .8;
+  color: var(--ghost);
+  letter-spacing: -.04em;
+  writing-mode: vertical-rl;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── titles ────────────────────────────────────────────────────── */
+.stage__head {
+  position: relative;
+  z-index: 3;
+  padding: clamp(22px, 5vh, 54px) clamp(20px, 5vw, 72px) 0;
+  text-align: center;
+  pointer-events: none;
+}
+
+.stage__eyebrow {
+  margin: 0 0 10px;
+  font-family: var(--mono);
+  font-size: clamp(9px, 1vw, 11px);
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: rgba(29, 27, 36, .55);
+}
+
+.stage__head h1 {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.creator {
+  position: absolute;
+  top: clamp(24px, 5vh, 54px);
+  left: clamp(20px, 5vw, 72px);
+  z-index: 4;
+  display: grid;
+  gap: 4px;
+  max-width: min(260px, 38vw);
+  padding: 12px 16px 13px;
+  border-left: 2px solid var(--volt);
+  background: linear-gradient(110deg, var(--chip), transparent);
+  backdrop-filter: blur(5px);
+  box-shadow: -10px 0 34px rgba(255, 203, 5, .08);
+}
+.creator__aura,
+.creator__links {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.creator__aura { color: var(--hint-key); }
+.creator__name {
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: clamp(12px, 1.35vw, 16px);
+  letter-spacing: .1em;
+  white-space: nowrap;
+  text-shadow: 0 0 18px rgba(255, 203, 5, .35);
+}
+.creator__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 3px;
+}
+.creator__links a {
+  color: var(--text-soft);
+  text-decoration: none;
+  transition: color .2s ease, transform .2s ease;
+}
+.creator__links a:hover,
+.creator__links a:focus-visible { color: var(--hint-key); transform: translateX(2px); }
+.creator__links a:focus-visible { outline: 1px solid var(--hint-key); outline-offset: 4px; }
+
+.stage__jp {
+  font-family: var(--jp);
+  font-weight: 900;
+  font-size: clamp(26px, 4.4vw, 58px);
+  letter-spacing: .3em;
+  text-indent: .3em;
+  color: var(--title);
+  text-shadow: var(--title-shadow);
+}
+
+/* Pokemon-logo flavour: blue outline, white inline, gold gradient face */
+.stage__en {
+  position: relative;
+  display: inline-block;
+  font-family: 'Titan One', system-ui, sans-serif;
+  font-size: clamp(48px, 9.5vw, 128px);
+  line-height: 1.05;
+  letter-spacing: .02em;
+  transform: skewX(-8deg);
+  color: var(--bolt);
+  -webkit-text-stroke: 11px var(--bolt);
+  paint-order: stroke fill;
+  filter: var(--logo-shadow);
+}
+.stage__en::before,
+.stage__en::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+.stage__en::before {                      /* white inline between outline and face */
+  color: #fffdf2;
+  -webkit-text-stroke: 5px #fffdf2;
+  paint-order: stroke fill;
+}
+.stage__en::after {                       /* gold face on top */
+  -webkit-text-stroke: 0;
+  background: linear-gradient(180deg, #fff6c9 4%, var(--volt) 36%, #f7a800 74%, #ffe27a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* thunder layer - above him, below the fluid cursor */
+.stage__thunder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ── theme toggle ──────────────────────────────────────────────── */
+.stage__theme {
+  position: absolute;
+  top: clamp(16px, 3vh, 30px);
+  right: clamp(16px, 3vw, 34px);
+  z-index: 4;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  line-height: 1;
+  color: var(--text);
+  background: var(--chip);
+  border: 1px solid var(--chip-line);
+  border-radius: 50%;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1), background .25s ease, border-color .25s ease;
+}
+.stage__theme:hover { transform: scale(1.08) rotate(-8deg); }
+.stage__theme:active { transform: scale(.94); }
+.stage__theme:focus-visible { outline: 2px solid var(--hint-key); outline-offset: 3px; }
+
+/* ── pikachu stage ─────────────────────────────────────────────── */
+.pika-stage {
+  position: relative;
+  min-height: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity .8s ease;
+  touch-action: manipulation;
+}
+.pika-stage.is-ready { opacity: 1; }
+.pika-stage canvas { width: 100%; height: 100%; display: block; }
+
+/* ── footer hints ──────────────────────────────────────────────── */
+.stage__foot {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px 24px;
+  padding: 0 clamp(20px, 5vw, 72px) clamp(20px, 4vh, 46px);
+  pointer-events: none;
+}
+
+.stage__hint {
+  font-family: var(--mono);
+  font-size: clamp(9px, 1vw, 11px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--hint);
+}
+.stage__hint em {
+  font-style: normal;
+  font-family: var(--jp);
+  letter-spacing: .18em;
+  color: var(--hint-key);
+}
+.stage__hint--tap { color: var(--hint-key); }
+
+@media (max-width: 720px) {
+  .creator { top: 18px; left: 18px; max-width: 52vw; padding: 9px 11px 10px; }
+  .creator__name { font-size: 11px; }
+  .creator__links { font-size: 8px; gap: 5px 10px; }
+  .stage__foot { justify-content: center; text-align: center; }
+  .stage__en::before { -webkit-text-stroke-width: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage__glow { transition: none; }
+}
